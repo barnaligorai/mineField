@@ -1,9 +1,13 @@
-echo '{"path":[2,6,10,11,15,19],"row":4,"col":4, "pos":2}' > mineField.json
+#! /bin/bash
+
+echo '{"path":[3,13,23,33,34,35,36,46,56,57,67,77,87,86,96],"row":10,"col":10, "pos":3}' > mineField.json
+
+node startGame.js 3
 
 game_state=$(grep 'Over' mineField.json)
 
-while [[ $? -ne 0 ]];do
+until [[ $? -eq 0 ]];do
   read -p 'Enter your move : ' move
-  node mineField.js $move
+  node startGame.js $move
   game_state=$(grep 'Over' mineField.json)
 done

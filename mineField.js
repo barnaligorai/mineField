@@ -1,16 +1,16 @@
-const fs = require('fs');
+const {writeFileSync, readFileSync} = require('fs');
 
 const readFile = function () {
-  return JSON.parse(fs.readFileSync('./minefield.json', 'utf8'));
+  return JSON.parse(readFileSync('./minefield.json', 'utf8'));
 };
 
 const writeFile = function (fieldData) {
-  return fs.writeFileSync('./mineField.json', JSON.stringify(fieldData), 'utf8');
+  return writeFileSync('./mineField.json', JSON.stringify(fieldData), 'utf8');
 };
 
 const validMoves = function ({pos, row, col}) {
-  const moves = [pos - col, pos - 1, pos + 1, pos + col];
-  if (pos % col === 0) moves.splice(2, 1);
+  const moves = [pos - col, pos - 1, pos, pos + 1, pos + col];
+  if (pos % col === 0) moves.splice(3, 1);
   if (pos % col === 1) moves.splice(1, 1);
   if (Math.ceil(pos / row) === 1) moves.splice(0, 1);
   return moves;
@@ -38,36 +38,59 @@ const setGameOver = function (fieldData) {
   return fieldData;
 };
 
-const isGameOver = function ({pos, path}) {
- return pos === path[path.length - 1];
-}
+const isGameOver = function ({ pos, path }) {
+  return pos === path[path.length - 1];
+};
 
-const main = function () {
+const generateTable = function (row, col) {
+  const table = [];
+  let num = 1;
+  for (let rowNum = 0; rowNum < row; rowNum++) {
+    const tr = [];
+    for (let colNum = 0; colNum < col; colNum++) {
+      tr.push(num++);
+    }
+    table.unshift(tr);
+  }
+  return table;
+};
+
+const padLeft = function (num) {
+  return ('' + num).padStart(2, 0);
+};
+
+const displayBoard = function (fieldData) {
+  const { pos, row, col } = fieldData;
+  const table = generateTable(row, col);
+  const currentPos = padLeft(pos);
+  const rows = table.map(row => row.map(num => padLeft(num)).join(' | '));
+  const board = rows.join('\n');
+  const symbol = isBomb(fieldData, pos) ? '😵' : '😇';
+  console.log('\n' + board.replace(currentPos, symbol) + '\n');
+};
+
+const main = function (move) {
   const fieldData = readFile();
-  const move = + process.argv[2];
 
   if (isMoveInvalid(fieldData, move)) {
-    console.log('Invalid move ❌');
+    console.log('\nInvalid move 😡\n');
     return;
   }
 
   if (isBomb(fieldData, move)) {
     setGameOver(fieldData);
-    console.log('Boom !!! 😵🤯');
-  } else {
-    updatePos(fieldData, move);
+    console.log('\n❌❌ Boom !!! ❌❌');
   }
+  updatePos(fieldData, move);
   
   if (isGameOver(fieldData)) {
     setGameOver(fieldData);
-    console.log('Congratulations !!! 🤟🤘');
+    console.log('\n🥳🤩 Congratulations !!! 🤟🥳');
   }
 
   writeFile(fieldData);
-  console.log('Your current position : ', fieldData.pos);
+  displayBoard(fieldData);
 };
-
-main();
 
 exports.validMoves = validMoves;
 exports.isMoveValid = isMoveValid;
@@ -76,4 +99,6 @@ exports.isBomb = isBomb;
 exports.setGameOver = setGameOver;
 exports.isGameOver = isGameOver;
 exports.updatePos = updatePos;
+exports.displayBoard = displayBoard;
+exports.generateTable = generateTable;
 exports.main = main;
