@@ -1,11 +1,13 @@
-const {writeFileSync, readFileSync} = require('fs');
+const fs = require('fs');
 
 const readFile = function () {
-  return JSON.parse(readFileSync('./minefield.json', 'utf8'));
+    return JSON.parse(fs.readFileSync('./minefield.json', 'utf8'));
 };
 
+const print = message => console.log(message);
+
 const writeFile = function (fieldData) {
-  return writeFileSync('./mineField.json', JSON.stringify(fieldData), 'utf8');
+  return fs.writeFileSync('./mineField.json', JSON.stringify(fieldData), 'utf8');
 };
 
 const validMoves = function ({pos, row, col}) {
@@ -66,19 +68,20 @@ const main = function (move) {
   const fieldData = readFile();
 
   if (isMoveInvalid(fieldData, move)) {
-    console.log('\nInvalid move 😡\n');
+    print('\nInvalid move 😡\n');
     return;
   }
 
   if (isBomb(fieldData, move)) {
     setGameOver(fieldData);
-    console.log('\n❌❌ Boom !!! ❌❌');
+    print('\n❌❌ Boom !!! ❌❌');
   }
+
   updatePos(fieldData, move);
   
   if (isGameOver(fieldData)) {
     setGameOver(fieldData);
-    console.log('\n🥳🤩 Congratulations !!! 🤟🥳');
+    print('\n🥳🤩 Congratulations !!! 🤟🥳');
   }
 
   writeFile(fieldData);
