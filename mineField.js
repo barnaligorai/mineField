@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 const readFile = function () {
-    return JSON.parse(fs.readFileSync('./minefield.json', 'utf8'));
+  return JSON.parse(fs.readFileSync('./minefield.json', 'utf8'));
 };
 
 const print = message => console.log(message);
@@ -65,7 +65,14 @@ const displayBoard = function (fieldData) {
 };
 
 const main = function (move) {
-  const fieldData = readFile();
+  let fieldData;
+  try {
+    fieldData = readFile();
+  } catch (error) {
+    print('Can\'t read the source file.');
+    writeFile({ gameStatus: 'Game Over.' });
+    return;
+  }
 
   if (isMoveInvalid(fieldData, move)) {
     print('\nInvalid move 😡\n');
@@ -83,8 +90,12 @@ const main = function (move) {
     setGameOver(fieldData);
     print('\n🥳🤩 Congratulations !!! 🤟🥳');
   }
-
-  writeFile(fieldData);
+  
+  try {
+    writeFile(fieldData);
+  } catch (error) {
+    print('\nCan\'t write the source file.');
+  }
   displayBoard(fieldData);
 };
 
