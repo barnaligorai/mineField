@@ -16,17 +16,11 @@ const validMoves = function ({pos, row, col}) {
   return moves;
 };
 
-const isBomb = function ({path}, move) {
-  return !path.includes(move);
-};
+const isBomb = ({path}, move) => !path.includes(move);
 
-const isMoveValid = function (fieldData, move) {
-  return validMoves(fieldData).includes(move);
-};
+const isMoveValid = (fieldData, move) => validMoves(fieldData).includes(move);
 
-const isMoveInvalid = function (fieldData, move) {
-  return !isMoveValid(fieldData, move);
-};
+const isMoveInvalid = (fieldData, move) => !isMoveValid(fieldData, move);
 
 const updatePos = function (fieldData, move) {
   fieldData.pos = move;
@@ -38,30 +32,29 @@ const setGameOver = function (fieldData) {
   return fieldData;
 };
 
-const isGameOver = function ({ pos, path }) {
-  return pos === path[path.length - 1];
-};
+const isGameOver = ({ pos, path }) => pos === Math.max(...path);
 
-const generateTable = function (row, col) {
-  const table = [];
-  let num = 1;
-  for (let rowNum = 0; rowNum < row; rowNum++) {
-    const tr = [];
-    for (let colNum = 0; colNum < col; colNum++) {
-      tr.push(num++);
+const generateSequence = (element, index) => index + 1;
+
+const partitionBy = function (group, element) {
+    const lastGroup = group[group.length - 1];
+    if (lastGroup.length < this) {
+      lastGroup.push(element);
+      return group;
     }
-    table.unshift(tr);
-  }
-  return table;
+    group.push([element]);
+    return group;
 };
 
-const padLeft = function (num) {
-  return ('' + num).padStart(2, 0);
-};
+const seq = limit => Array(limit).fill(1).map(generateSequence);
+
+const createTable = (row, col) => seq(row * col).reduce(partitionBy.bind(col), [[]]);
+
+const padLeft = num => ('' + num).padStart(2, 0);
 
 const displayBoard = function (fieldData) {
   const { pos, row, col } = fieldData;
-  const table = generateTable(row, col);
+  const table = createTable(row, col).reverse();
   const currentPos = padLeft(pos);
   const rows = table.map(row => row.map(num => padLeft(num)).join(' | '));
   const board = rows.join('\n');
@@ -100,5 +93,5 @@ exports.setGameOver = setGameOver;
 exports.isGameOver = isGameOver;
 exports.updatePos = updatePos;
 exports.displayBoard = displayBoard;
-exports.generateTable = generateTable;
+exports.createTable = createTable;
 exports.main = main;
