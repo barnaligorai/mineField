@@ -1,4 +1,4 @@
-const { createReport } = require('./../../concept/createReport.js');
+const { createReport } = require('./createReport.js');
 
 const mineFieldLib = require('./mineField.js');
 const validMoves = mineFieldLib.validMoves;
@@ -7,6 +7,7 @@ const isMoveInvalid = mineFieldLib.isMoveInvalid;
 const isBomb = mineFieldLib.isBomb;
 const setGameOver = mineFieldLib.setGameOver;
 const updatePos = mineFieldLib.updatePos;
+const createTable = mineFieldLib.createTable;
 const isGameOver = mineFieldLib.isGameOver;
 const main = mineFieldLib.main;
 
@@ -115,7 +116,17 @@ const test = () => {
       isGameOver({'path': [2,5,8,11], 'row': 3,'col': 3, 'pos': 8}),
       false,
       'When game is not over.'
-  ],
+    ],
+    [
+      createTable(2, 2),
+      [[1, 2], [3, 4]],
+      'Generate 2x2 table.'
+    ],
+    [
+      createTable(3, 4),
+      [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]],
+      'Generate 3x4 table.'
+    ],
   ];
   
   createReport(testCases);
