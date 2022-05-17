@@ -30,13 +30,21 @@ const updatePos = function (fieldData, move) {
 };
 
 const setGameOver = function (fieldData) {
-  fieldData.gameStatus = 'Game Over !!!';
+  fieldData.gameStatus = 'Game Over.';
   return fieldData;
 };
 
-const isGameOver = ({ pos, path }) => pos === Math.max(...path);
-
-const generateSequence = (element, index) => index + 1;
+const isGameOver = (fieldData) => {
+  const { pos, path } = fieldData;
+  if (isBomb({path}, pos)) {
+    fieldData.message = '\n❌❌ Boom !!! ❌❌';
+    return true;
+  } else if (pos === Math.max(...path)) {
+    fieldData.message = '\n🥳🤩 Congratulations !!! 🤟🥳';
+    return true;
+  }
+  return false;
+};
 
 const partitionBy = function (group, element) {
     const lastGroup = group[group.length - 1];
@@ -48,7 +56,7 @@ const partitionBy = function (group, element) {
     return group;
 };
 
-const seq = limit => Array(limit).fill(1).map(generateSequence);
+const seq = limit => Array(limit).fill(1).map((element, index) => index + 1);
 
 const createTable = (row, col) => seq(row * col).reduce(partitionBy.bind(col), [[]]);
 
@@ -61,10 +69,10 @@ const displayBoard = function (fieldData) {
   const rows = table.map(row => row.map(num => padLeft(num)).join(' | '));
   const board = rows.join('\n');
   const symbol = isBomb(fieldData, pos) ? '😵' : '😇';
-  console.log('\n' + board.replace(currentPos, symbol) + '\n');
+  print('\n' + board.replace(currentPos, symbol) + '\n');
 };
 
-const findMove = ({pos, col}, char) => {
+const mapMove = ({pos, col}, char) => {
   const moves = {
     'u' : pos + col,
     'd' : pos - col,
@@ -74,7 +82,7 @@ const findMove = ({pos, col}, char) => {
   return moves[char.toLowerCase()];
 };
 
-const main = function (nextMove) {
+const main = function (playersChoice) {
   let fieldData;
   try {
     fieldData = readFile();
@@ -83,23 +91,17 @@ const main = function (nextMove) {
     writeFile({ gameStatus: 'Game Over.' });
     return;
   }
-  const move = findMove(fieldData, nextMove);
 
+  const move = mapMove(fieldData, playersChoice);
   if (isMoveInvalid(fieldData, move)) {
     print('\nInvalid move 😡\n');
     return ;
   }
 
-  if (isBomb(fieldData, move)) {
-    setGameOver(fieldData);
-    print('\n❌❌ Boom !!! ❌❌');
-  }
-
   updatePos(fieldData, move);
-  
   if (isGameOver(fieldData)) {
     setGameOver(fieldData);
-    print('\n🥳🤩 Congratulations !!! 🤟🥳');
+    print(fieldData.message);
   }
   
   try {
@@ -119,4 +121,6 @@ exports.isGameOver = isGameOver;
 exports.updatePos = updatePos;
 exports.displayBoard = displayBoard;
 exports.createTable = createTable;
+exports.mapMove = mapMove;
+exports.seq = seq;
 exports.main = main;

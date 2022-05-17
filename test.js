@@ -9,6 +9,8 @@ const setGameOver = mineFieldLib.setGameOver;
 const updatePos = mineFieldLib.updatePos;
 const createTable = mineFieldLib.createTable;
 const isGameOver = mineFieldLib.isGameOver;
+const mapMove = mineFieldLib.mapMove;
+const seq = mineFieldLib.seq;
 const main = mineFieldLib.main;
 
 const test = () => {
@@ -104,18 +106,33 @@ const test = () => {
     ],
     [
       setGameOver({'path': [2,5,8,11], 'row': 3,'col': 3, 'pos': 5}),
-      { 'path': [2, 5, 8, 11], 'row': 3, 'col': 3, 'pos': 5, 'gameStatus': 'Game Over !!!' },
+      { 'path': [2, 5, 8, 11], 'row': 3, 'col': 3, 'pos': 5, 'gameStatus': 'Game Over.' },
       'Set game over status.'
     ],
     [
       isGameOver({'path': [2,5,8,11], 'row': 3,'col': 3, 'pos': 11}),
       true,
-      'When game is over.'
+      'Game over when player won.'
+    ],
+    [
+      isGameOver({'path': [2,5,8,11], 'row': 3,'col': 3, 'pos': 3}),
+      true,
+      'Game over when player stepped on bomb.'
     ],
     [
       isGameOver({'path': [2,5,8,11], 'row': 3,'col': 3, 'pos': 8}),
       false,
       'When game is not over.'
+    ],
+    [
+      seq(2),
+      [1,2],
+      'Seq of 2.'
+    ],
+    [
+      seq(0),
+      [],
+      'Seq of 0.'
     ],
     [
       createTable(2, 2),
@@ -126,6 +143,26 @@ const test = () => {
       createTable(3, 4),
       [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]],
       'Generate 3x4 table.'
+    ],
+    [
+      mapMove({pos : 2, col : 2}, 'u'),
+      4,
+      'Finding move for "u".'
+    ],
+    [
+      mapMove({pos : 2, col : 2}, 'd'),
+      0,
+      'Finding move for "d".'
+    ],
+    [
+      mapMove({pos : 2, col : 2}, 'r'),
+      3,
+      'Finding move for "r".'
+    ],
+    [
+      mapMove({pos : 2, col : 2}, 'l'),
+      1,
+      'Finding move for "l".'
     ],
   ];
   
