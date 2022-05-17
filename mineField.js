@@ -64,7 +64,17 @@ const displayBoard = function (fieldData) {
   console.log('\n' + board.replace(currentPos, symbol) + '\n');
 };
 
-const main = function (move) {
+const findMove = ({pos, col}, char) => {
+  const moves = {
+    'u' : pos + col,
+    'd' : pos - col,
+    'l' : pos - 1,
+    'r' : pos + 1,
+  };
+  return moves[char.toLowerCase()];
+};
+
+const main = function (nextMove) {
   let fieldData;
   try {
     fieldData = readFile();
@@ -73,10 +83,11 @@ const main = function (move) {
     writeFile({ gameStatus: 'Game Over.' });
     return;
   }
+  const move = findMove(fieldData, nextMove);
 
   if (isMoveInvalid(fieldData, move)) {
     print('\nInvalid move 😡\n');
-    return;
+    return ;
   }
 
   if (isBomb(fieldData, move)) {
