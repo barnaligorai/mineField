@@ -26,6 +26,7 @@ const isMoveInvalid = (fieldData, move) => !isMoveValid(fieldData, move);
 
 const updatePos = function (fieldData, move) {
   fieldData.pos = move;
+  fieldData.choices.push(move);
   return fieldData;
 };
 
@@ -38,9 +39,11 @@ const isGameOver = (fieldData) => {
   const { pos, path } = fieldData;
   if (isBomb({path}, pos)) {
     fieldData.message = '\n❌❌ Boom !!! ❌❌';
+    fieldData.result = 'Bombed'
     return true;
   } else if (pos === Math.max(...path)) {
     fieldData.message = '\n🥳🤩 Congratulations !!! 🤟🥳';
+    fieldData.result = 'Won'
     return true;
   }
   return false;

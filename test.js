@@ -1,5 +1,4 @@
 const { createReport } = require('./createReport.js');
-
 const mineFieldLib = require('./mineField.js');
 const validMoves = mineFieldLib.validMoves;
 const isMoveValid = mineFieldLib.isMoveValid;
@@ -11,7 +10,6 @@ const createTable = mineFieldLib.createTable;
 const isGameOver = mineFieldLib.isGameOver;
 const mapMove = mineFieldLib.mapMove;
 const seq = mineFieldLib.seq;
-const main = mineFieldLib.main;
 
 const test = () => {
   const testCases = [
@@ -100,8 +98,8 @@ const test = () => {
       'Not stepped on a bomb.'
     ],
     [
-      updatePos({'path': [2,5,8,11], 'row': 3,'col': 3, 'pos': 5}, 8),
-      { 'path': [2, 5, 8, 11], 'row': 3, 'col': 3, 'pos': 8 },
+      updatePos({'path': [2,5,8,11], 'row': 3,'col': 3, 'pos': 5, 'choices':[]}, 8),
+      { 'path': [2, 5, 8, 11], 'row': 3, 'col': 3, 'pos': 8, 'choices':[8] },
       'Updating position.'
     ],
     [
