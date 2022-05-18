@@ -1,13 +1,13 @@
 const fs = require('fs');
 
 const readFile = function () {
-  return JSON.parse(fs.readFileSync('./minefield.json', 'utf8'));
+  return JSON.parse(fs.readFileSync('./src/minefield.json', 'utf8'));
 };
 
 const print = message => console.log(message);
 
 const writeFile = function (fieldData) {
-  return fs.writeFileSync('./mineField.json', JSON.stringify(fieldData), 'utf8');
+  return fs.writeFileSync('./src/mineField.json', JSON.stringify(fieldData), 'utf8');
 };
 
 const validMoves = function ({pos, row, col}) {

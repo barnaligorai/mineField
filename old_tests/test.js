@@ -1,5 +1,5 @@
 const { createReport } = require('./createReport.js');
-const mineFieldLib = require('./mineField.js');
+const mineFieldLib = require('./../src/mineField.js');
 const validMoves = mineFieldLib.validMoves;
 const isMoveValid = mineFieldLib.isMoveValid;
 const isMoveInvalid = mineFieldLib.isMoveInvalid;
